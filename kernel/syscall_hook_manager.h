@@ -10,8 +10,10 @@ void ksu_syscall_hook_manager_init(void);
 void ksu_syscall_hook_manager_exit(void);
 
 // extras.c
+#ifndef CONFIG_KSU_SUSFS
 void ksu_avc_spoof_init(void);
 void ksu_avc_spoof_exit(void);
+#endif // #ifndef CONFIG_KSU_SUSFS
 
 #ifdef KSU_KPROBES_HOOK
 // Process marking for tracepoint

@@ -7,8 +7,10 @@ enum ksu_feature_id {
 	KSU_FEATURE_SU_COMPAT = 0,
 	KSU_FEATURE_KERNEL_UMOUNT = 1,
 
+#ifndef CONFIG_KSU_SUSFS
     // custom extensions
     KSU_FEATURE_AVC_SPOOF = 10003,
+#endif // #ifndef CONFIG_KSU_SUSFS
 
     KSU_FEATURE_MAX
 };

@@ -18,6 +18,9 @@
 #include "ksu.h"
 #include "file_wrapper.h"
 #include "selinux/selinux.h"
+#ifdef CONFIG_KSU_SUSFS
+#include <linux/susfs.h>
+#endif // #ifdef CONFIG_KSU_SUSFS
 
 extern void __init ksu_lsm_hook_init(void);
 extern int ksu_handle_execveat_sucompat(int *fd, struct filename **filename_ptr,
@@ -115,6 +118,10 @@ int __init kernelsu_init(void)
 
 		ksu_allowlist_init();
 		ksu_load_allow_list();
+		
+#ifdef CONFIG_KSU_SUSFS
+    susfs_init();
+#endif // #ifdef CONFIG_KSU_SUSFS
 
 		ksu_syscall_hook_manager_init();
 

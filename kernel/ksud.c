@@ -128,13 +128,18 @@ void on_module_mounted(void)
 	ksu_module_mounted = true;
 }
 
+#ifndef CONFIG_KSU_SUSFS
 extern void ksu_avc_spoof_late_init();
+#endif // #ifndef CONFIG_KSU_SUSFS
+
 void on_boot_completed(void)
 {
     ksu_boot_completed = true;
     pr_info("on_boot_completed!\n");
     track_throne(true);
+#ifndef CONFIG_KSU_SUSFS
     ksu_avc_spoof_late_init();
+#endif // #ifndef CONFIG_KSU_SUSFS
 }
 
 #define MAX_ARG_STRINGS 0x7FFFFFFF
