@@ -1,9 +1,3 @@
-#ifdef CONFIG_KSU_TAMPER_SYSCALL_TABLE
-#define SUCOMPAT_HOOK_TYPE static __always_inline int
-#else
-#define SUCOMPAT_HOOK_TYPE int
-#endif
-
 #define SU_PATH "/system/bin/su"
 #define SH_PATH "/system/bin/sh"
 
@@ -222,7 +216,7 @@ no_escalate:
 }
 
 // sys_faccessat
-SUCOMPAT_HOOK_TYPE ksu_handle_faccessat(int *dfd, const char __user **filename_user, int *mode, int *__unused_flags)
+int ksu_handle_faccessat(int *dfd, const char __user **filename_user, int *mode, int *__unused_flags)
 {
 	if (!is_su_allowed((const void **)filename_user))
 		return 0;
@@ -232,7 +226,7 @@ SUCOMPAT_HOOK_TYPE ksu_handle_faccessat(int *dfd, const char __user **filename_u
 }
 
 // sys_newfstatat, sys_fstat64
-SUCOMPAT_HOOK_TYPE ksu_handle_stat(int *dfd, const char __user **filename_user, int *flags)
+int ksu_handle_stat(int *dfd, const char __user **filename_user, int *flags)
 {
 	if (!is_su_allowed((const void **)filename_user))
 		return 0;
@@ -242,7 +236,7 @@ SUCOMPAT_HOOK_TYPE ksu_handle_stat(int *dfd, const char __user **filename_user, 
 }
 
 // sys_execve, compat_sys_execve
-SUCOMPAT_HOOK_TYPE ksu_handle_execve_sucompat(int *fd, const char __user **filename_user, void *argv, void *envp, int *flags)
+int ksu_handle_execve_sucompat(int *fd, const char __user **filename_user, void *argv, void *envp, int *flags)
 {
 	sys_execve_escape_ksud((void *)filename_user);
 
@@ -257,7 +251,6 @@ SUCOMPAT_HOOK_TYPE ksu_handle_execve_sucompat(int *fd, const char __user **filen
 	return 0;
 }
 
-#ifndef CONFIG_KSU_TAMPER_SYSCALL_TABLE
 static __always_inline void ksu_sucompat_kernel_common(void **filename_ptr, void *argv, void *envp, const char *function_name)
 {
 	kernel_execve_escape_ksud((void *)filename_ptr);
@@ -341,7 +334,6 @@ int ksu_legacy_execve_sucompat(const char **filename_ptr, void *argv, void *envp
 	return 0;
 }
 #endif
-#endif // CONFIG_KSU_TAMPER_SYSCALL_TABLE
 
 #ifdef CONFIG_KSU_TAMPER_SYSCALL_TABLE
 static void syscall_table_sucompat_enable();
