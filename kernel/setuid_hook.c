@@ -159,11 +159,6 @@ int ksu_handle_setresuid(uid_t ruid, uid_t euid, uid_t suid)
 #ifdef KSU_KPROBES_HOOK
 		ksu_set_task_tracepoint_flag(current);
 #endif
-	} else {
-#ifdef KSU_KPROBES_HOOK
-		ksu_clear_task_tracepoint_flag_if_needed(current);
-#endif
-    }
 
     // Handle kernel umount
     //ksu_handle_umount(old_uid, new_uid);
